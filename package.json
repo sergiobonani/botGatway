@@ -1,0 +1,19 @@
+{
+  "name": "botgatway",
+  "version": "1.0.0",
+  "description": "Api Node.js para comunicação entre Bot e Api de consórcio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Sérgio Bonani",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.3",
+    "morgan": "^1.9.1",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2"
+  }
+}

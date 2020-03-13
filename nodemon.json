@@ -1,0 +1,6 @@
+{
+    "env": {
+        "MONGO_ATLAS_PW": "Q%40W%23e4r5",
+        "URL_API": "https://hom-apiconsorciadomysql.caoaconsorcios.com.br"
+    }
+}
