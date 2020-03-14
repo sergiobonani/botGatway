@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const http = require('https');
 let fetch = require('node-fetch');
 const request = require("request");
+const mongoose = require("mongoose");
 
 const apiUrl = 'https://hom-apiconsorciadomysql.caoaconsorcios.com.br/';
 
@@ -20,8 +21,10 @@ exports.post = (req, resp, next) => {
     const corpo = req.body.queryResult;
 
     const parametrosRequest = new ParametrosRequest();
-    const historicoConversa = new HistoricoConversa();
+    HistoricoConversa.init();
 
+    var historicoConversa = new HistoricoConversa();
+    
     historicoConversa.session = req.body.session;
     historicoConversa.responseId = req.body.responseId;
 
@@ -49,29 +52,255 @@ exports.post = (req, resp, next) => {
 
                 const senha = findValueElement(element.parameters, "senha");
                 parametrosRequest.senha = senha ? senha : parametrosRequest.senha;
+
+                const cota = findValueElement(element.parameters, "cota");
+                parametrosRequest.cota = cota ? cota : parametrosRequest.cota;
+
+                const grupo = findValueElement(element.parameters, "grupo");
+                parametrosRequest.grupo = grupo ? grupo : parametrosRequest.grupo;
+
+                const valorLance = findValueElement(element.parameters, "valor_lance");
+                parametrosRequest.valorLance = valorLance ? valorLance : parametrosRequest.valorLance;
             }
         });
     }
 
-    if (historicoConversa.tipoAcao == acoes.SENHA_OK || historicoConversa.tipoAcao == acao.REDIGITA_SENHA_OK) {
-        logarSistema(parametrosRequest.senha, parametrosRequest.cpf).then(function (result) {
-            if (result.isSuccess == false) {
-                resp.status(200).json({
-                    fulfillmentText: result.mensagem,
-                    displayText: result.mensagem
-                });
-            } else {
-                dadosUsuarioLogado.idUsuario = result.idUsuario;
-                buscarCotas(dadosUsuarioLogado).then(function (result) {
-                    resp.status(200).json({
-                        fulfillmentText: result.mensagem,
-                        displayText: result.mensagem
-                    });
-                });
-            }
+    if (historicoConversa.tipoAcao == acoes.SENHA_OK || historicoConversa.tipoAcao == acoes.REDIGITA_SENHA_OK) {
+        // logarSistema(parametrosRequest.senha, parametrosRequest.cpf).then(function (result) {
+        //     if (result.isSuccess == false) {
+        //         resp.status(200).json({
+        //             fulfillmentText: result.mensagem,
+        //             displayText: result.mensagem
+        //         });
+        //     } else {
+        //         dadosUsuarioLogado.idUsuario = result.idUsuario;
+        //         buscarCotas(dadosUsuarioLogado).then(function (result) {
+        //             resp.status(200).json({
+        //                 fulfillmentText: result.mensagem,
+        //                 displayText: result.mensagem
+        //             });
+        //         });
+        //     }
+        // });
+        var msg = "Seus grupos e cotas são: 1774-6000-0. Digite para qual grupo deseja atendimento.";
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: msg,
+            displayText: "teste"
         });
-    }  
+    }
+    
+    if(historicoConversa.tipoAcao == acoes.GRUPO_COTA_SELECIONADA){
+        // verificarGrupoCotaValido(parametrosRequest.cota, parametrosRequest.grupo).then(function(result){
+        //     resp.status(200).json({
+        //         fulfillmentText: result.mensagem,
+        //         displayText: result.mensagem
+        //     })
+        // });
+
+        var msg = 'O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?';
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: msg,
+            displayText: "teste"
+        })
+    }
+
+    if(historicoConversa.tipoAcao == acoes.INFO_COTA){
+        // obterInformacoesSobreCota(parametrosRequest.cota, parametrosRequest.grupo).then(function(result){
+        //     resp.status(200).json({
+        //         fulfillmentText: result.mensagem,
+        //         displayText: result.mensagem
+        //     })
+        // });
+        var msg = 'Sua cota está com o pagamento em dia. Caso queira mais alguma informação, digite uma opção ou ATENDENTE';
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: msg,
+            displayText: "teste"
+        })        
+    }
+
+    if(historicoConversa.tipoAcao == acoes.OFERTAR_LANCE){
+        // ofertarLance(parametrosRequest.cota, parametrosRequest.grupo, paramentros.valorLance).then(function(result){
+        //     resp.status(200).json({
+        //         fulfillmentText: result.mensagem,
+        //         displayText: result.mensagem
+        //     })
+        // });
+
+        var msg = 'Lance ofertado com sucesso. Caso queira mais alguma informação, digite uma opção ou ATENDENTE';
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: msg,
+            displayText: "teste"
+        })
+    }
+
+    if(historicoConversa.tipoAcao == acoes.RESULT_ULT_ASSEMBLEIA){
+        // obterResultadoUltimaAssembleia(parametrosRequest.cota, parametrosRequest.grupo, paramentros.valorLance).then(function(result){
+        //     resp.status(200).json({
+        //         fulfillmentText: result.mensagem,
+        //         displayText: result.mensagem
+        //     })
+        // });
+
+        var msg = 'Foram 8 cotas contempladas. Caso queira mais alguma informação, digite uma opção ou ATENDENTE';
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: msg,
+            displayText: "teste"
+        })
+    }
+
+    if(historicoConversa.tipoAcao == acoes.PROX_ASSEMBLEIA){
+        // obterProximaAssembleia(parametrosRequest.cota, parametrosRequest.grupo, paramentros.valorLance).then(function(result){
+        //     resp.status(200).json({
+        //         fulfillmentText: result.mensagem,
+        //         displayText: result.mensagem
+        //     })
+        // });
+
+        historicoConversa.mensagemBot = msg;
+
+        resp.status(200).json({
+            fulfillmentText: 'A próxima assembleia será no dia 20/05. Caso queira mais alguma informação, digite uma opção ou ATENDENTE',
+            displayText: "teste"
+        })
+    } else{
+        resp.status(200).json();
+    }
+
+    console.log(mongoose.connection.readyState);
+
+    historicoConversa.save(function(err){
+        if(err){
+             console.log(err);
+             return;
+        }
+  });
 };
+
+function obterInformacoesSobreCota(cota, grupo){
+    var url = '';    
+    var options = obterOptionsPostRequest(url);
+    options.formData = { cota: cota, grupo: grupo };
+
+    return new Promise(function (resolve, reject) {
+        response = new ResponseApi();
+
+        request(options, function (error, resp, body) {
+            if (error) {
+                console.log(error);
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+            }
+
+            const retornoAPI = JSON.parse(body);
+
+            if(!retornoAPI.isSuccess){
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+                response.isSuccess = false;
+                return resolve(response);
+            }
+
+            response.isSuccess = true;
+            response.mensagem = 'O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?'
+            resolve(response);
+        });        
+    });
+}
+
+function verificarGrupoCotaValido(cota, grupo){
+    var url = '';    
+    var options = obterOptionsPostRequest(url);
+    options.formData = { cota: cota, grupo: grupo };
+
+    return new Promise(function (resolve, reject) {
+        response = new ResponseApi();
+
+        request(options, function (error, resp, body) {
+            if (error) {
+                console.log(error);
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+            }
+
+            const retornoAPI = JSON.parse(body);
+
+            if(!retornoAPI.isSuccess){
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+                response.isSuccess = false;
+                return resolve(response);
+            }
+
+            response.isSuccess = true;
+            response.mensagem = 'O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?'
+            resolve(response);
+        });        
+    });
+}
+
+function obterInformacoesSobreBoleto(cota, grupo){
+    var url = '';    
+    var options = obterOptionsPostRequest(url);
+    options.formData = { cota: cota, grupo: grupo };
+
+    return new Promise(function (resolve, reject) {
+        response = new ResponseApi();
+
+        request(options, function (error, resp, body) {
+            if (error) {
+                console.log(error);
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+            }
+
+            const retornoAPI = JSON.parse(body);
+
+            if(!retornoAPI.isSuccess){
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+                response.isSuccess = false;
+                return resolve(response);
+            }
+
+            response.isSuccess = true;
+            response.mensagem = 'O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?'
+            resolve(response);
+        });        
+    });
+}
+
+function ofertarLance(cota, grupo, valorLance){
+    var url = '';    
+    var options = obterOptionsPostRequest(url);
+    options.formData = { cota: cota, grupo: grupo };
+
+    return new Promise(function (resolve, reject) {
+        response = new ResponseApi();
+
+        request(options, function (error, resp, body) {
+            if (error) {
+                console.log(error);
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+            }
+
+            const retornoAPI = JSON.parse(body);
+
+            if(!retornoAPI.isSuccess){
+                response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
+                response.isSuccess = false;
+                return resolve(response);
+            }
+
+            response.isSuccess = true;
+            response.mensagem = 'O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?'
+            resolve(response);
+        });        
+    });
+}
 
 function findValueElement(object, key) {
     var value;
@@ -129,16 +358,17 @@ function logarSistema(senha, cpf) {
             const retornoAPI = JSON.parse(body);
 
             if (!retornoAPI.success) {
-                if (retornoAPI.details.search('CPF/CNPJ') == 0) {
+                if (retornoAPI.details.search('CPF/CNPJ') >= 0) {
                     response.mensagem = 'O CPF informado está inválido. Digite INFORMAR CPF, para informar novamente.'
                 }
-                else if (retornoAPI.details.search('Senha') == 0) {
+                else if (retornoAPI.details.search('Senha') >= 0) {
                     response.mensagem = 'Senha informada é inválida, digite INFORMAR SENHA, para informar novamente. Ou digite ESQUECI MINHA SENHA.'
                 }
                 else {
                     response.mensagem = 'Ops, aconteceu algum erro que não podemos ajudar. Tente novamente mais tarde ou digite ATENDENTE para falar com uma pessoa.'
                 }
 
+                response.isSuccess = false;
                 return resolve(response);
             }
 
@@ -183,7 +413,7 @@ function criarMensagemParaCotas(cotas) {
     }
 
     var mensagem = '';
-    cotas.forEach(cota => {
+    cotas[0].forEach(cota => {
         const Codigo_Cota = cota.Codigo_Cota;
         const Codigo_Grupo = cota.Codigo_Grupo;
         const Versao = cota.Versao;

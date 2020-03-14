@@ -6,14 +6,14 @@ const mongoose = require('mongoose');
 
 const webhookRoutes = require('./api/routes/webhook');
 
-// mongoose.connect(
-//     'mongodb+srv://admin:'+ 
-//     process.env.MONGO_ATLAS_PW +
-//     '@botgateway-dsjn4.mongodb.net/test?retryWrites=true&w=majority',
-//     {
-//         useNewUrlParser: true
-//     }
-// );
+mongoose.connect(
+    'mongodb+srv://admin:'+ 
+    process.env.MONGO_ATLAS_PW +
+    '@botgateway-dsjn4.mongodb.net/test?retryWrites=true&w=majority',
+    {
+        useNewUrlParser: true
+    }
+);
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
