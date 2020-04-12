@@ -7,10 +7,9 @@ const mongoose = require('mongoose')
 
 
 const routes = require('./routes')
-const dbConfig = require('./config/database')
 const app = express()
 
-mongoose.connect(dbConfig.url, {
+mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })

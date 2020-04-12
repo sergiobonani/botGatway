@@ -1,8 +1,9 @@
 const fs = require('fs')
+
 const ParametroRequest = require('../models/ParametroRequest')
 const { findValueElement } = require('../utils/ObjectParser')
 
-let rawdata = fs.readFileSync('../resources/deParaParameters.json');
+let rawdata = fs.readFileSync('src/resources/deParaParameters.json');
 
 ParametroRequest.init()
 

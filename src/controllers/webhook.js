@@ -4,7 +4,7 @@ const fetch = require('node-fetch')
 const HistoricoService = require('../services/HistoricoService')
 const ParametroRequestService = require('../services/ParametroRequestService')
 
-const rawData = fs.readFileSync('../resources/actions.json');
+const rawData = fs.readFileSync('src/resources/actions.json');
 const ACTIONS = JSON.parse(rawData)
 
 async function handle(req, res) {
