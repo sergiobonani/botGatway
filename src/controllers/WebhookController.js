@@ -27,8 +27,7 @@ async function handle(req, res) {
 
 async function getAll(req, res) {
     const resultHistorico = await HistoricoService.recuperaTodos()
-    const resultParametros = await ParametroRequestService.recuperaTodos()
-    res.json({...resultHistorico, ...resultParametros})
+    res.json(resultHistorico)
 }
 
 module.exports = { handle, getAll }
