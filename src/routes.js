@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const Webhook = require('./controllers/webhook')
+const WebhookController = require('./controllers/WebhookController')
 
 router.get('/ping', (req, res) => res.json({ message: 'Online' }));
-router.get('/', Webhook.getAll)
-router.post('/', Webhook.handle)
+router.get('/', WebhookController.getAll)
+router.post('/', WebhookController.handle)
 
 module.exports = router;

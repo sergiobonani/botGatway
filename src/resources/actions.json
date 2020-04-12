@@ -1,44 +1,46 @@
-{
-	"SENHA_OK": {
+[
+	{
         "code": "03Obtendosenha.03Obtendosenha-yes-2",
         "parametros": ["senha", "cpf"],
         "endpoint": "user/acessoAppCpfCnpj/1",
-        "message": "Seus grupos e cotas são: 1774-6000-0. Digite para qual grupo deseja atendimento."
+        "message": "Seus grupos e cotas são: 1774-6000-0. Digite para qual grupo deseja atendimento.",
+        "hookFunction": "logarSistema"
     },
-	"REDIGITA_SENHA_OK": {
+	{
         "code": "03Obtendosenha.03Obtendosenha-no-2.03Obtendosenha-no-2-custom",
         "parametros": ["senha", "cpf"],
         "endpoint": "user/acessoAppCpfCnpj/1",
-        "message": "Seus grupos e cotas são: 1774-6000-0. Digite para qual grupo deseja atendimento."
+        "message": "Seus grupos e cotas são: 1774-6000-0. Digite para qual grupo deseja atendimento.",
+        "hookFunction": "logarSistema"
     },
-	"GRUPO_COTA_SELECIONADA": {
+	{
         "code": "obtendo-grupo-cota",
         "parametros": ["cota", "grupo"],
         "endpoint": "",
         "message": "O que deseja fazer? INFORMAÇÕES SOBRE A COTA, INFORMAÇÕES SOBRE BOLETO, OFERTAR LANCE, RESULTADO DA ÚLTIMA ASSEMBLEIA ou PRÓXIMA ASSEMBLEIA?"
     },
-	"INFO_COTA": {
+	{
         "code": "info-cota",
         "parametros": ["cota", "grupo"],
         "endpoint": "",
         "message": "Sua cota está com o pagamento em dia. Caso queira mais alguma informação, digite uma opção ou ATENDENTE"
     },
-	"OFERTAR_LANCE": {
+	{
         "code": "ofertar-lance",
         "parametros": ["cota", "grupo", "valorLance"],
         "endpoint": "",
         "message": "Lance ofertado com sucesso. Caso queira mais alguma informação, digite uma opção ou ATENDENTE"
     },
-	"RESULT_ULT_ASSEMBLEIA": {
+	{
         "code": "resultado-ultima-assembleia",
         "parametros": ["cota", "grupo", "valorLance"],
         "endpoint": "",
         "message": "Foram 8 cotas contempladas. Caso queira mais alguma informação, digite uma opção ou ATENDENTE"
     },
-	"PROX_ASSEMBLEIA": {
+	{
         "code": "03Obtendosenha.03Obtendosenha-no-2.03Obtendosenha-no-2-custom",
         "parametros": ["cota", "grupo", "valorLance"],
         "endpoint": "",
         "message": "A próxima assembleia será no dia 20/05. Caso queira mais alguma informação, digite uma opção ou ATENDENTE"
     }
-}
+]

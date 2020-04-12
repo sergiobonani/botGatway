@@ -16,8 +16,12 @@ async function criaHistorico(body) {
     return HistoricoConversa.create(historicoConversa)
 }
 
+async function atualizaHistorico(historicoConversa) {
+    return HistoricoConversa.update(historicoConversa)
+}
+
 function recuperaTodos() {
     return HistoricoConversa.find().exec()
 }
 
-module.exports = { criaHistorico, recuperaTodos }
+module.exports = { criaHistorico, recuperaTodos, atualizaHistorico }
